@@ -5,10 +5,75 @@
     xmlns:local="using:DataBinding"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:DataBinding.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:DataType="data:BookData" x:Key="DataTempGridView">
+            <StackPanel Margin="10,10,10,10">
+                <Image Width="200" Source="{x:Bind ImageSource}"/>
+                <TextBlock HorizontalAlignment="Center" Text="{x:Bind BookTitle}"/>
+                <TextBlock HorizontalAlignment="Center" Text="{x:Bind BookAuthor}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="data:BookData" x:Key="DataTempListView">
+            <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
+                <Image Width="200" Source="{x:Bind ImageSource}"/>
+                <StackPanel Margin="20" VerticalAlignment="Center">
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind BookTitle}"/>
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Bind BookAuthor}"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
 
+        <TextBlock FontSize="18" Foreground="Red" Name="Result" Grid.Row="1" Margin="20,20,0,0"/>
+
+        <GridView Name="DesktopView" 
+                  Visibility="Visible" 
+                  IsItemClickEnabled="True" 
+                  ItemClick="ItemClick" 
+                  ItemsSource="{x:Bind Books}" 
+                  ItemTemplate="{StaticResource DataTempGridView}"/>
+        
+        <ListView Name="MobileView" 
+                  Visibility="Collapsed" 
+                  IsItemClickEnabled="True" 
+                  ItemClick="ItemClick" 
+                  ItemsSource="{x:Bind Books}" 
+                  ItemTemplate="{StaticResource DataTempListView}"/>
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DesktopView.Visibility" Value="Collapsed"/>
+                        <Setter Target="MobileView.Visibility" Value="Visible"/>
+                        <Setter Target="Result.FontSize" Value="14"/>
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DesktopView.Visibility" Value="Visible"/>
+                        <Setter Target="MobileView.Visibility" Value="Collapsed"/>
+                        <Setter Target="Result.FontSize" Value="18"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
     </Grid>
 </Page>

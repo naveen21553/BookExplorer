@@ -7,6 +7,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using DataBinding.Data;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -22,9 +23,18 @@ namespace DataBinding
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private List<BookData> Books;
         public MainPage()
         {
             this.InitializeComponent();
+            Books = BookData.GetBooks();
         }
+
+        private void ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var Book = (BookData)e.ClickedItem;
+            Result.Text = "You Clicked " + Book.BookTitle + "\nby Author " + Book.BookAuthor;
+        }
+       
     }
 }
